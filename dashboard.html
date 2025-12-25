@@ -1,0 +1,53 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>ValidaPlus</title>
+
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="manifest" href="./manifest.json">
+  <meta name="theme-color" content="#121212">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+</head>
+
+<body>
+
+  <!-- TOPBAR FIXA -->
+  <header class="topbar">
+    <h2>ValidaPlus</h2>
+
+    <div class="acoes">
+      <button id="ativarNotificacao" title="Notificações">🔔</button>
+      <button id="toggleTema" title="Tema">🌙</button>
+      <button id="logout" title="Sair">🚪</button>
+    </div>
+  </header>
+
+  <!-- CONTEÚDO -->
+  <main class="container">
+
+    <h1>Validades</h1>
+
+    <form id="produtoForm">
+      <input type="text" id="nome" placeholder="Nome do produto" required>
+      <input type="date" id="validade" required>
+      <button type="submit">Salvar</button>
+    </form>
+
+    <div class="filtros">
+      <button data-filtro="todos">Todos</button>
+      <button data-filtro="alerta">Próximos</button>
+      <button data-filtro="vencido">Vencidos</button>
+     
+
+    </div>
+
+    <ul id="listaProdutos"></ul>
+
+  </main>
+
+  <script src="js/produtos.js"></script>
+</body>
+</html>
