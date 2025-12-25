@@ -217,3 +217,10 @@ if (toggleTema) {
   });
 }
 
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/validaplus/sw.js")
+      .then(() => console.log("Service Worker registrado ✅"))
+      .catch(err => console.log("Erro no SW ❌", err));
+  });
+}
