@@ -2,7 +2,7 @@
   "name": "Valida+",
   "short_name": "Valida+",
   "description": "Controle de validade de produtos",
-  "start_url": "dashboard.html",
+  "start_url": "./",
   "display": "standalone",
   "background_color": "#121212",
   "theme_color": "#121212",
@@ -20,3 +20,4 @@
     }
   ]
 }
+
