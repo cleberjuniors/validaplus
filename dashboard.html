@@ -26,15 +26,18 @@
   </header>
 
   <!-- CONTEÚDO -->
-  <main class="container">
+  <div class="cadastro-wrapper">
+  <form id="produtoForm" class="linha-cadastro">
+    <button id="lerCodigo" type="button">📷</button>
 
-    <h1>Validades</h1>
+    <input type="text" id="codigo" placeholder="Código">
+    <input type="text" id="nome" placeholder="Produto" required>
+    <input type="date" id="validade" required>
+    <input type="number" id="quantidade" placeholder="Qtd" min="1" required>
 
-    <form id="produtoForm">
-      <input type="text" id="nome" placeholder="Nome do produto" required>
-      <input type="date" id="validade" required>
-      <button type="submit">Salvar</button>
-    </form>
+    <button type="submit" class="btn-salvar">Salvar</button>
+  </form>
+</div>
 
     <div class="filtros">
       <button data-filtro="todos">Todos</button>
@@ -44,10 +47,28 @@
 
     </div>
 
-    <ul id="listaProdutos"></ul>
+  <div class="tabela-container">
+  <table class="tabela-produtos">
+    <thead>
+      <tr>
+        <th>📷</th>
+        <th>Código</th>
+        <th>Produto</th>
+        <th>Validade</th>
+        <th>Qtd</th>
+        <th>Dias</th>
+        <th>Ação</th>
+      </tr>
+    </thead>
+
+    <tbody id="listaProdutos">
+      <!-- JS preenche aqui -->
+    </tbody>
+  </table>
+</div>
 
   </main>
-
+  <script src="https://unpkg.com/@zxing/library@latest"></script>
   <script src="js/produtos.js"></script>
 </body>
 </html>

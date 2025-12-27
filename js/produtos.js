@@ -82,69 +82,105 @@ function diasRestantes(dataValidade) {
 
 // RENDERIZAR LISTA
 function renderProdutos() {
-  const lista = document.getElementById("listaProdutos");
-  lista.innerHTML = "";
+  const tabela = document.getElementById("listaProdutos");
+  tabela.innerHTML = "";
 
-  let produtos = getProdutos();
+  const produtos = getProdutos();
 
-  // 1️⃣ ORDENA (se ativo)
-  if (ordenarPorData) {
-    produtos.sort((a, b) => {
-      return diasRestantes(a.validade) - diasRestantes(b.validade);
+  produtos.forEach((produto, pIndex) => {
+    produto.lotes.forEach((lote, lIndex) => {
+      const dias = diasRestantes(lote.validade);
+
+      let status = "ok";
+      if (dias < 0) status = "vencido";
+      else if (dias <= 7) status = "alerta";
+
+      // filtro
+      if (filtroAtual !== "todos" && status !== filtroAtual) return;
+
+      const tr = document.createElement("tr");
+      tr.className = status;
+
+      tr.innerHTML = `
+        <td>📦</td>
+        <td>${produto.codigo}</td>
+        <td>${produto.nome}</td>
+        <td>${lote.validade}</td>
+        <td>${lote.quantidade}</td>
+        <td>${dias}</td>
+        <td>
+          <button onclick="removerLote(${pIndex}, ${lIndex})">❌</button>
+        </td>
+      `;
+
+      tabela.appendChild(tr);
     });
-  }
-
-  // 2️⃣ FILTRA + RENDERIZA
-  produtos.forEach((p, index) => {
-    const dias = diasRestantes(p.validade);
-
-    let status = "ok";
-    if (dias < 0) status = "vencido";
-    else if (dias <= 7) status = "alerta";
-
-    // 🔥 FILTRO AQUI
-    if (filtroAtual !== "todos" && status !== filtroAtual) return;
-
-    const li = document.createElement("li");
-    li.className = status;
-    li.innerHTML = `
-      <strong>${p.nome}</strong><br>
-      Validade: ${p.validade}<br>
-      Dias restantes: ${dias}
-      <button onclick="removerProduto(${index})">X</button>
-    `;
-
-    lista.appendChild(li);
   });
 }
 
+
+// ADICIONAR PRODUTO
 // ADICIONAR PRODUTO
 document.getElementById("produtoForm").addEventListener("submit", (e) => {
   e.preventDefault();
 
-  const nome = document.getElementById("nome").value;
+  const codigo = document.getElementById("codigo").value.trim();
+  const nome = document.getElementById("nome").value.trim();
   const validade = document.getElementById("validade").value;
+  const quantidade = Number(document.getElementById("quantidade").value);
 
   const produtos = getProdutos();
-  produtos.push({
-    nome,
-    validade,
-    notificado: false
-  });
+
+  // procura produto pelo código
+  let produto = produtos.find(p => p.codigo === codigo);
+
+  if (!produto) {
+    // cria produto novo
+    produtos.push({
+      codigo,
+      nome,
+      lotes: [
+        {
+          validade,
+          quantidade,
+          notificado: false
+        }
+      ]
+    });
+  } else {
+    // produto já existe → procurar lote
+    let lote = produto.lotes.find(l => l.validade === validade);
+
+    if (lote) {
+      lote.quantidade += quantidade;
+    } else {
+      produto.lotes.push({
+        validade,
+        quantidade,
+        notificado: false
+      });
+    }
+  }
 
   saveProdutos(produtos);
   e.target.reset();
   renderProdutos();
-  verificarNotificacoes(); // 👈 AQUI
+  verificarNotificacoes();
 });
 
 // REMOVER
-function removerProduto(index) {
+function removerLote(produtoIndex, loteIndex) {
   const produtos = getProdutos();
-  produtos.splice(index, 1);
+  produtos[produtoIndex].lotes.splice(loteIndex, 1);
+
+  if (produtos[produtoIndex].lotes.length === 0) {
+    produtos.splice(produtoIndex, 1);
+  }
+
   saveProdutos(produtos);
   renderProdutos();
 }
+
 
 // LOGOUT
 document.getElementById("logout").addEventListener("click", () => {
@@ -222,5 +258,32 @@ if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("/validaplus/sw.js")
       .then(() => console.log("Service Worker registrado ✅"))
       .catch(err => console.log("Erro no SW ❌", err));
+  });
+}
+const btnLer = document.getElementById("lerCodigo");
+const video = document.getElementById("camera");
+
+if (btnLer) {
+  btnLer.addEventListener("click", async () => {
+    const codeReader = new ZXing.BrowserMultiFormatReader();
+
+    video.style.display = "block";
+
+    try {
+      const result = await codeReader.decodeOnceFromVideoDevice(
+        null,
+        video
+      );
+
+      document.getElementById("codigo").value = result.text;
+
+      navigator.vibrate?.(200);
+      video.style.display = "none";
+      codeReader.reset();
+
+    } catch (err) {
+      alert("Erro ao ler código");
+      console.error(err);
+    }
   });
 }
