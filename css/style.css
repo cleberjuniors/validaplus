@@ -258,3 +258,15 @@ body.dark tr.vencido {
 .linha-cadastro input {
   text-align: left;
 }
+@media (max-width: 768px) {
+  .card {
+    display: block !important;
+    width: 100%;
+    overflow: visible;
+  }
+
+  #buscaProduto {
+    display: block !important;
+  }
+}
+
