@@ -1,6 +1,4 @@
 
-
-
  let ordenarPorData = false;
 
 const btnOrdenar = document.getElementById("ordenarData");
@@ -13,6 +11,18 @@ if (btnOrdenar) {
   });
 }
 
+let termoBusca = "";
+
+const inputBusca = document.getElementById("buscaProduto");
+
+if (inputBusca) {
+  inputBusca.addEventListener("input", () => {
+    termoBusca = inputBusca.value.toLowerCase();
+    renderProdutos();
+    const produtos = getProdutos();
+
+  });
+}
 
 
 let filtroAtual = "todos";
@@ -35,22 +45,23 @@ function verificarNotificacoes() {
   let alterado = false;
 
   produtos.forEach(p => {
-    const dias = diasRestantes(p.validade);
+    p.lotes.forEach(lote => {
+      const dias = diasRestantes(lote.validade);
 
-    if (!p.notificado && dias <= 3) {
-      notificar(
-        dias < 0 ? "Produto vencido ❌" : "Produto perto de vencer ⚠️",
-        `${p.nome} vence em ${dias} dia(s)`
-      );
+      if (!lote.notificado && dias <= 3) {
+        notificar(
+          dias < 0 ? "Produto vencido ❌" : "Produto perto de vencer ⚠️",
+          `${p.nome} vence em ${dias} dia(s)`
+        );
 
-      p.notificado = true;
-      alterado = true;
-    }
+        lote.notificado = true;
+        alterado = true;
+      }
+    });
   });
 
   if (alterado) saveProdutos(produtos);
 }
-
 
 
 // BUSCAR PRODUTOS DO USUÁRIO
@@ -88,6 +99,20 @@ function renderProdutos() {
   const produtos = getProdutos();
 
   produtos.forEach((produto, pIndex) => {
+
+    // 🔍 BUSCA PARCIAL (código ou nome)
+    if (termoBusca) {
+      const codigo = produto.codigo.toLowerCase();
+      const nome = produto.nome.toLowerCase();
+
+      if (
+        !codigo.includes(termoBusca) &&
+        !nome.includes(termoBusca)
+      ) {
+        return; // pula esse produto inteiro
+      }
+    }
+
     produto.lotes.forEach((lote, lIndex) => {
       const dias = diasRestantes(lote.validade);
 
@@ -95,7 +120,7 @@ function renderProdutos() {
       if (dias < 0) status = "vencido";
       else if (dias <= 7) status = "alerta";
 
-      // filtro
+      // filtro por status
       if (filtroAtual !== "todos" && status !== filtroAtual) return;
 
       const tr = document.createElement("tr");
@@ -105,6 +130,7 @@ function renderProdutos() {
         <td>📦</td>
         <td>${produto.codigo}</td>
         <td>${produto.nome}</td>
+        <td>${lote.local}</td>
         <td>${lote.validade}</td>
         <td>${lote.quantidade}</td>
         <td>${dias}</td>
@@ -126,6 +152,7 @@ document.getElementById("produtoForm").addEventListener("submit", (e) => {
 
   const codigo = document.getElementById("codigo").value.trim();
   const nome = document.getElementById("nome").value.trim();
+  const local = document.getElementById("local").value.trim();
   const validade = document.getElementById("validade").value;
   const quantidade = Number(document.getElementById("quantidade").value);
 
@@ -142,6 +169,7 @@ document.getElementById("produtoForm").addEventListener("submit", (e) => {
       lotes: [
         {
           validade,
+          local,
           quantidade,
           notificado: false
         }
@@ -156,6 +184,7 @@ document.getElementById("produtoForm").addEventListener("submit", (e) => {
     } else {
       produto.lotes.push({
         validade,
+        local,
         quantidade,
         notificado: false
       });

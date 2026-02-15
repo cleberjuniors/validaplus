@@ -28,24 +28,41 @@
   <!-- CONTEÚDO -->
   <div class="cadastro-wrapper">
   <form id="produtoForm" class="linha-cadastro">
-    <button id="lerCodigo" type="button">📷</button>
+  <button id="lerCodigo" type="button">📷</button>
 
-    <input type="text" id="codigo" placeholder="Código">
-    <input type="text" id="nome" placeholder="Produto" required>
-    <input type="date" id="validade" required>
-    <input type="number" id="quantidade" placeholder="Qtd" min="1" required>
+  <input
+    type="text"
+    id="codigo"
+    placeholder="Código de barras (13 dígitos)"
+    maxlength="13"
+    pattern="[0-9]{13}"
+    required
+    oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+  >
 
-    <button type="submit" class="btn-salvar">Salvar</button>
-  </form>
+  <input type="text" id="nome" placeholder="Produto" required>
+  <input type="text" id="local" placeholder="Local" required>
+  <input type="date" id="validade" required>
+  <input type="number" id="quantidade" placeholder="Qtd" min="1" required>
+  <button type="submit" class="btn-salvar">Salvar</button>
+</form>
+
 </div>
 
     <div class="filtros">
       <button data-filtro="todos">Todos</button>
-      <button data-filtro="alerta">Próximos</button>
+      <button data-filtro="alerta">Próximos de vencer</button>
       <button data-filtro="vencido">Vencidos</button>
      
 
     </div>
+<div class="card">
+  <input
+    type="text"
+    id="buscaProduto"
+    placeholder="Pesquisar por código ou nome do produto..."
+  />
+</div>
 
   <div class="tabela-container">
   <table class="tabela-produtos">
@@ -54,10 +71,13 @@
         <th>📷</th>
         <th>Código</th>
         <th>Produto</th>
+        <th>Local</th>
         <th>Validade</th>
         <th>Qtd</th>
         <th>Dias</th>
         <th>Ação</th>
+       
+
       </tr>
     </thead>
 

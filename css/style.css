@@ -143,38 +143,35 @@ button:hover {
   border-radius: 8px;
 }
 
-.tabela-produtos {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 13px;
-}
+
 .tabela-produtos thead {
   background: #1f6fb2; /* azul ERP */
   color: #fff;
 }
 
-.tabela-produtos th {
-  padding: 10px 8px;
-  text-align: left;
-  font-weight: 600;
-  white-space: nowrap;
+.tabela-produtos {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
 }
+
+.tabela-produtos th,
 .tabela-produtos td {
   padding: 8px;
-  border-bottom: 1px solid var(--border);
-  white-space: nowrap;
+  color: var(--text);
 }
-tr.ok {
-  background: #f8fff8;
-}
-
-tr.alerta {
-  background: #fff8e6;
+body.dark tr.ok {
+  background: #1e1e1e;
 }
 
-tr.vencido {
-  background: #fff1f1;
+body.dark tr.alerta {
+  background: #1e1e1e;
 }
+
+body.dark tr.vencido {
+  background: #1e1e1e;
+}
+
 .tabela-produtos thead th {
   position: sticky;
   top: 0;
@@ -198,7 +195,16 @@ tr.vencido {
 
 .linha-cadastro {
   display: grid;
-  grid-template-columns: 40px 1fr 2fr 1.3fr 1fr 90px;
+  grid-template-columns: 
+    40px      /* 📷 */
+    1.5fr     /* Código */
+    2fr       /* Produto */
+    1.5fr     /* Local */
+    1.3fr     /* Validade */
+    0.8fr     /* Qtd */
+    0.8fr     /* Dias (vazio) */
+    80px;     /* Ação */
+
   gap: 6px;
   align-items: center;
   background: var(--box);
@@ -217,4 +223,38 @@ tr.vencido {
   margin: 0;
   height: 36px;
   font-size: 13px;
+}
+#buscaProduto {
+  width: 100%;
+  padding: 0.7rem 1rem;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  font-size: 0.95rem;
+}
+.filtros-avancados select {
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  font-size: 0.9rem;
+}
+/* Alinhamento padrão ERP */
+.tabela-produtos th,
+.tabela-produtos td {
+  text-align: left;
+  vertical-align: middle;
+  padding-left: 8px;
+}
+
+/* Centralizar apenas ícones e ações */
+.tabela-produtos th:nth-child(1),
+.tabela-produtos td:nth-child(1),
+.tabela-produtos th:nth-child(8),
+.tabela-produtos td:nth-child(8) {
+  text-align: center;
+  padding-left: 0;
+}
+
+/* Inputs do formulário alinhados à esquerda */
+.linha-cadastro input {
+  text-align: left;
 }
