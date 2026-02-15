@@ -1,3 +1,4 @@
+let streamAtual = null;
 
  let ordenarPorData = false;
 
@@ -210,6 +211,62 @@ function removerLote(produtoIndex, loteIndex) {
   renderProdutos();
 }
 
+//CAMERA 
+const botaoScan = document.getElementById("lerCodigo");
+
+botaoScan.addEventListener("click", () => {
+  console.log("clicou no scanner");
+
+  // se existir input de busca, libera foco
+  const busca = document.getElementById("buscaProduto");
+  if (busca) busca.blur();
+
+function abrirCamera() {
+  navigator.mediaDevices.getUserMedia({
+    video: { facingMode: "environment" }
+  })
+  .then(stream => {
+    streamAtual = stream; // ✅ GUARDA O STREAM
+
+    const video = document.getElementById("video");
+    const camera = document.getElementById("camera");
+
+    if (!video || !camera) {
+      console.error("Camera ou video não encontrado");
+      return;
+    }
+
+    camera.style.display = "flex";
+    video.srcObject = streamAtual;
+    video.play();
+  })
+  .catch(err => {
+    alert("Erro ao acessar a câmera: " + err.message);
+    console.error(err);
+  });
+}
+
+
+});
+
+// FECHAR CAMERA
+
+document.getElementById("fecharCamera").addEventListener("click", () => {
+  const camera = document.getElementById("camera");
+  const video = document.getElementById("video");
+  const codigoInput = document.getElementById("codigo");
+
+  if (streamAtual) {
+    streamAtual.getTracks().forEach(track => track.stop());
+    streamAtual = null;
+  }
+
+  video.srcObject = null;
+  camera.style.display = "none";
+
+  // devolve foco para o formulário
+  codigoInput.focus();
+});
 
 // LOGOUT
 document.getElementById("logout").addEventListener("click", () => {

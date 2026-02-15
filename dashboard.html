@@ -16,7 +16,7 @@
 
   <!-- TOPBAR FIXA -->
   <header class="topbar">
-    <h2>ValidaPlus</h2>
+    <h2>ValidaPlus+</h2>
 
     <div class="acoes">
       <button id="ativarNotificacao" title="Notificações">🔔</button>
@@ -29,6 +29,12 @@
   <div class="cadastro-wrapper">
   <form id="produtoForm" class="linha-cadastro">
   <button id="lerCodigo" type="button">📷</button>
+
+  <!-- CAMERA -->
+  <div id="camera" style="display: none;">
+    <video id="video" autoplay playsinline></video>
+    <button type="button" id="fecharCamera">Fechar</button>
+  </div>
 
   <input
     type="text"
