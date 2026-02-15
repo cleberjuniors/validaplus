@@ -179,9 +179,7 @@ body.dark tr.vencido {
   z-index: 2;
 }
 
-/* =====================
-   RESPONSIVO (CELULAR)
-===================== */
+
 @media (min-width: 768px) {
   .container {
     max-width: 600px;
@@ -260,6 +258,7 @@ body.dark tr.vencido {
   text-align: left;
 }
 
+
 .camera {
   position: fixed;
   top: 0;
@@ -290,3 +289,15 @@ body.dark tr.vencido {
   overflow-y: auto;
 }
  
+
+@media (max-width: 768px) {
+  .card {
+    display: block !important;
+    width: 100%;
+    overflow: visible;
+  }
+
+  #buscaProduto {
+    display: block !important;
+  }
+}
